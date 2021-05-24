@@ -28,7 +28,7 @@ public class CommentController {
     public List<Comment> getAllCommentsByPost(@PathVariable int postID){return commentService.listByPost(postID);}
 
     @PostMapping
-    public void writeComment(@RequestBody Comment c){commentService.create(c);}
+    public int writeComment(@RequestBody Comment c){return commentService.create(c);}
 
     @PutMapping(path="{id}")
     public void editComment(@RequestBody Comment c, @PathVariable int id){

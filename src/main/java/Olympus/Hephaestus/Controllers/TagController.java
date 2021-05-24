@@ -30,7 +30,7 @@ public class TagController {
     public List<String> getTagCloud(){return tagService.listLabels();}
 
     @PostMapping
-    public void makeTag(@RequestBody Tag t){tagService.create(t);}
+    public int makeTag(@RequestBody Tag t){return tagService.create(t);}
 
     @PutMapping(path="{id}")
     public void changeTag(@RequestBody Tag t, @PathVariable int id){ tagService.update(t,id);}

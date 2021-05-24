@@ -27,7 +27,7 @@ public class PostController {
     public List<Post> getPostByTag(@PathVariable String tag){return postService.listByTag(tag);}
 
     @PostMapping
-    public void writeBlog(@RequestBody Post p){postService.create(p);}
+    public int writeBlog(@RequestBody Post p){return postService.create(p);}
 
     @PutMapping(path="{id}")
     public void updateHome(@RequestBody Post p, @PathVariable int id){postService.update(p,id);}

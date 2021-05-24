@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +47,18 @@ public class PostService implements DAO<Post> {
 
 
     @Override
-    public void create(Post post) {
+    public int create(Post post) {
         String sql="INSERT INTO POST(TITLE, AUTHOR, BODY, PUBLISHED) VALUES(?,?,?,?)";
-        jdbcTemplate.update(sql, post.getTitle(),post.getAuthor(), post.getBody(), post.getPublished());
+        KeyHolder holdMeClose= new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
+            ps.setString(1, post.getTitle());
+            ps.setString(2, post.getAuthor());
+            ps.setString(3, post.getBody());
+            ps.setDate(4, post.getPublished());
+            return ps;
+        }, holdMeClose);
+        return holdMeClose.getKey().intValue();
     }
 
     @Override

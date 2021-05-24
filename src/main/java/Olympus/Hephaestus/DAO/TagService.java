@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,9 +52,16 @@ public class TagService implements DAO<Tag>{
     }
 
     @Override
-    public void create(Tag tag) {
+    public int create(Tag tag) {
         String sql="INSERT INTO TAG(LABEL, POST_ID) VALUES(?,?)";
-        jdbcTemplate.update(sql, tag.getLabel(), tag.getPostId());
+        KeyHolder holdMeClose= new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
+            ps.setString(1, tag.getLabel());
+            ps.setInt(2, tag.getPostId());
+            return ps;
+        }, holdMeClose);
+        return holdMeClose.getKey().intValue();
     }
 
     @Override
