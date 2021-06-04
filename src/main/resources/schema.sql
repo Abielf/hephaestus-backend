@@ -1,25 +1,21 @@
 
 
-CREATE TABLE COMMENT(
-    ID INT NOT NULL AUTO_INCREMENT,
-    BODY VARCHAR2(500) NOT NULL DEFAULT '',
-    AUTHOR VARCHAR2(255) NOT NULL DEFAULT '',
-    WRITTEN_ON DATE DEFAULT NULL,
-    POST_ID SMALLINT DEFAULT NULL,
-    PRIMARY KEY (ID));
+CREATE TABLE post(
+                     id BIGSERIAL NOT NULL PRIMARY KEY,
+                     title VARCHAR(100) NOT NULL,
+                     body VARCHAR(6000) NOT NULL,
+                     author VARCHAR(30) NOT NULL,
+                     published_on DATE NOT NULL);
 
 
+CREATE TABLE tag(
+                    id BIGSERIAL NOT NULL PRIMARY KEY,
+                    label VARCHAR(50) NOT NULL,
+                    post_id BIGINT NOT NULL);
 
-CREATE TABLE POST (
-    ID INT NOT NULL AUTO_INCREMENT,
-    TITLE VARCHAR2(255) NOT NULL DEFAULT '',
-    BODY VARCHAR2(3000) NOT NULL DEFAULT '',
-    AUTHOR VARCHAR2(255) NOT NULL DEFAULT '',
-    PUBLISHED DATE DEFAULT NULL,
-    PRIMARY KEY (ID));
-
-CREATE TABLE TAG(
-    ID INT NOT NULL AUTO_INCREMENT,
-    LABEL VARCHAR2(50) NOT NULL DEFAULT '',
-    POST_ID INT DEFAULT NULL,
-    PRIMARY KEY(ID));
+CREATE TABLE comment(
+                        id BIGSERIAL NOT NULL PRIMARY KEY,
+                        body VARCHAR(500) NOT NULL,
+                        author VARCHAR(30) NOT NULL,
+                        written_on DATE DEFAULT NULL,
+                        post_id BIGINT DEFAULT NULL);
