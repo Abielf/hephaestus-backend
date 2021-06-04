@@ -48,7 +48,7 @@ public class PostService implements DAO<Post> {
 
     @Override
     public int create(Post post) {
-        String sql="INSERT INTO POST(TITLE, AUTHOR, BODY, PUBLISHED_ON) VALUES(?,?,?,?)";
+        String sql="INSERT INTO POST(TITLE, BODY, AUTHOR,PUBLISHED_ON) VALUES (?,?,?,?)";
         KeyHolder holdMeClose= new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
