@@ -26,7 +26,7 @@ public class PostService implements DAO<Post> {
         post.setTitle(rs.getString("TITLE"));
         post.setAuthor(rs.getString("AUTHOR"));
         post.setBody(rs.getString("BODY"));
-        post.setPublished(rs.getDate("PUBLISHED"));
+        post.setPublished(rs.getDate("PUBLISHED_ON"));
     return post;
     };
 
@@ -36,7 +36,7 @@ public class PostService implements DAO<Post> {
 
     @Override
     public List<Post> list() {
-        String sql="SELECT ID, TITLE, AUTHOR, BODY, PUBLISHED FROM POST";
+        String sql="SELECT ID, TITLE, AUTHOR, BODY, PUBLISHED_ON FROM POST";
         return jdbcTemplate.query(sql, rows);
     }
 
@@ -48,7 +48,7 @@ public class PostService implements DAO<Post> {
 
     @Override
     public int create(Post post) {
-        String sql="INSERT INTO POST(TITLE, AUTHOR, BODY, PUBLISHED) VALUES(?,?,?,?)";
+        String sql="INSERT INTO POST(TITLE, AUTHOR, BODY, PUBLISHED_ON) VALUES(?,?,?,?)";
         KeyHolder holdMeClose= new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
@@ -63,7 +63,7 @@ public class PostService implements DAO<Post> {
 
     @Override
     public Optional<Post> get(int id) {
-        String sql="SELECT ID, TITLE, AUTHOR, BODY, PUBLISHED FROM POST WHERE ID=?";
+        String sql="SELECT ID, TITLE, AUTHOR, BODY, PUBLISHED_ON FROM POST WHERE ID=?";
         Post post=null;
         try{post=jdbcTemplate.queryForObject(sql, rows, id);}
         catch(DataAccessException e){log.info("Article not found");}
@@ -73,7 +73,7 @@ public class PostService implements DAO<Post> {
 
     @Override
     public void update(Post post, int id) {
-        String sql="UPDATE POST SET TITLE=?, AUTHOR=?, BODY=?, PUBLISHED=? WHERE ID=?";
+        String sql="UPDATE POST SET TITLE=?, AUTHOR=?, BODY=?, PUBLISHED_ON=? WHERE ID=?";
         int update= jdbcTemplate.update(sql, post.getTitle(), post.getAuthor(), post.getBody(),post.getPublished() ,id);
         if(update==1){log.info("Post Updated");}
     }
