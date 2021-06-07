@@ -7,12 +7,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,11 +58,15 @@ public class TagService implements DAO<Tag>{
     public int create(Tag tag) {
         String sql="INSERT INTO TAG(LABEL, POST_ID) VALUES(?,?)";
         KeyHolder holdMeClose= new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"ID"});
-            ps.setString(1, tag.getLabel());
-            ps.setInt(2, tag.getPostId());
-            return ps;
+        jdbcTemplate.update(new PreparedStatementCreator()
+        {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException
+            {
+                PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
+                ps.setString(1, tag.getLabel());
+                ps.setInt(2, tag.getPostId());
+                return ps;
+            }
         }, holdMeClose);
         return holdMeClose.getKey().intValue();
     }
